@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import logo from "./logo.svg";
 import {Button, DatePicker} from "antd";
 import "./App.css";
-import {typeProduct} from "src/types/product";
+import {blogPost} from "src/types/blogPost";
 
 function UlPostsData(): JSX.Element {
-  const [postsData, setPostsData] = useState(Array<string>);
+  const [postsData, setPostsData] = useState(Array<blogPost>);
 
   return (
     <div>
@@ -22,8 +22,8 @@ function UlPostsData(): JSX.Element {
 
 
 function ButtonGetData({clickEvent, postsData}: {
-  clickEvent: (textData: Array<string>) => void,
-  postsData: Array<string>
+  clickEvent: (textData: Array<blogPost>) => void,
+  postsData: Array<blogPost>
 }): JSX.Element {
   console.log("logButtonGetData");
   return (
@@ -40,13 +40,7 @@ function ButtonGetData({clickEvent, postsData}: {
               body: JSON.stringify({"skip": "0"})
             })
             .then((response) => response.json())
-            .then((json) => {
-              let tempData: Array<string> = [];
-              json.map((m: { content: string; }) => {
-                tempData.push(m.content);
-              });
-              clickEvent(tempData);
-            });
+            .then((jsonResult: Array<blogPost>) => clickEvent(jsonResult));
         }
       }
     >
@@ -56,12 +50,12 @@ function ButtonGetData({clickEvent, postsData}: {
 }
 
 function ListPosts({postsData}: {
-  postsData: Array<string>
+  postsData: Array<blogPost>
 }): JSX.Element {
   console.log("logListPosts");
   return (
     <ul>
-      {postsData.map((m: string) => <li key={m}>{m}</li>)}
+      {postsData.map((m: blogPost) => <li key={m.Id}>Id:{m.Id} Title{m.Title} Content{m.Content}</li>)}
     </ul>
   );
 }
