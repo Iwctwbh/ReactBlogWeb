@@ -111,13 +111,13 @@ const iconHover = css`
 `;
 
 const cardMinusStyle = css`
-  max-width: 1000px;
+  width: 1000px;
   height: 200px;
   overflow: hidden;
 `;
 
 const cardPlusStyle = css`
-  max-width: 1000px;
+  width: 1000px;
   min-height: 200px;
   height: 100%;
   overflow: unset;
