@@ -9,6 +9,7 @@ import {css, SerializedStyles} from "@emotion/react";
 
 // element
 const PostsCards = (): ReactElement => {
+  console.log("PostsCards is calling");
   const [postsData, setPostsData] = useState<blogPosts>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
@@ -51,32 +52,31 @@ const PostsCards = (): ReactElement => {
 const PostCard = ({Title, Content}: {
   Title: string, Content: string
 }): ReactElement => {
+  console.log("PostCard is calling");
   const [cardStyle, setCardStyle] = useState<SerializedStyles>(cardMinusStyle);
 
   return (
     <Card
       title={Title}
       extra={
-        <a href="#">
+        <div>
           {
-            cardStyle == cardMinusStyle ?
+            cardStyle == cardMinusStyle
+              ?
               <PlusOutlined
                 css={iconHover}
-                onClick={() => {
-                  setCardStyle(cardPlusStyle);
-                }}
+                onClick={() => setCardStyle(cardPlusStyle)}
               />
               :
               <MinusOutlined
                 css={iconHover}
-                onClick={() => {
-                  setCardStyle(cardMinusStyle);
-                }}
+                onClick={() => setCardStyle(cardMinusStyle)}
               />
           }
-        </a>
+        </div>
       }
       css={cardStyle}
+      //onClick={() => cardStyle == cardMinusStyle ? setCardStyle(cardPlusStyle) : setCardStyle(cardMinusStyle)}
     >
       <MDEditor.Markdown source={Content} />
     </Card>
@@ -84,6 +84,7 @@ const PostCard = ({Title, Content}: {
 };
 
 const ListPosts = ({postsData}: { postsData: blogPosts | undefined }): ReactElement => {
+  console.log("ListPosts is calling");
   return (
     <Space direction="vertical" size={16}>
       {postsData?.data.map((m: blogPost) => {
@@ -121,6 +122,7 @@ const cardMinusStyle = css`
 
 const cardPlusStyle = css`
   max-width: 1000px;
+  min-height: 200px;
   height: 100%;
   overflow: unset;
 `;
