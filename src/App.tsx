@@ -59,21 +59,17 @@ const PostCard = ({Title, Content}: {
     <Card
       title={Title}
       extra={
-        <div>
-          {
-            cardStyle == cardMinusStyle
-              ?
-              <PlusOutlined
-                css={iconHover}
-                onClick={() => setCardStyle(cardPlusStyle)}
-              />
-              :
-              <MinusOutlined
-                css={iconHover}
-                onClick={() => setCardStyle(cardMinusStyle)}
-              />
-          }
-        </div>
+        cardStyle == cardMinusStyle
+          ?
+          <PlusOutlined
+            css={iconHover}
+            onClick={() => setCardStyle(cardPlusStyle)}
+          />
+          :
+          <MinusOutlined
+            css={iconHover}
+            onClick={() => setCardStyle(cardMinusStyle)}
+          />
       }
       css={cardStyle}
       //onClick={() => cardStyle == cardMinusStyle ? setCardStyle(cardPlusStyle) : setCardStyle(cardMinusStyle)}
