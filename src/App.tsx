@@ -18,7 +18,7 @@ const PostsCards = (): ReactElement => {
   useEffect(() => {
     (async () => {
       setNeedRefreshData(false);
-      await fetch("http://10.11.12.30:5232/GetPosts",
+      await fetch("http://nas.iwctwbh.top:5232/GetPosts",
         {
           method: "Post",
           headers: new Headers({
