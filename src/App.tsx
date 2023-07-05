@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, {ReactElement, useState} from "react";
+import React, {ReactElement, useEffect, useState} from "react";
 import {Button, Card, InputNumber, Space} from "antd";
 import "./App.css";
 import {blogPost, blogPosts} from "src/types/blogPost";
@@ -8,11 +8,27 @@ import {PlusOutlined, MinusOutlined} from "@ant-design/icons";
 import {css, SerializedStyles} from "@emotion/react";
 
 // element
-const PostsCards: React.FC = () => {
+const PostsCards = (): ReactElement => {
   const [postsData, setPostsData] = useState<blogPosts>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
   const [needRefreshData, setNeedRefreshData] = useState<boolean>(true);
+
+  useEffect(() => {
+    (async () => {
+      setNeedRefreshData(false);
+      await fetch("http://10.11.12.30:5232/GetPosts",
+        {
+          method: "Post",
+          headers: new Headers({
+            "Content-Type": "application/json"
+          }),
+          body: JSON.stringify({skip: skip, take: take, order: "asc", search: ""})
+        })
+        .then((response) => response.json())
+        .then((jsonResult: blogPosts) => setPostsData(jsonResult));
+    })();
+  }, [needRefreshData]);
 
   return (
     <>
@@ -26,25 +42,19 @@ const PostsCards: React.FC = () => {
         </Button>
       </Space>
       <div>
-        <ListPosts
-          postsData={postsData}
-          clickEvent={setPostsData}
-          skip={skip}
-          take={take}
-          needRefreshData={needRefreshData}
-          refreshEvent={setNeedRefreshData}
-        />
+        <ListPosts postsData={postsData} />
       </div>
     </>
   );
 };
 
-function PostCard({Title, Id, Content}: { Title: string, Id: number, Content: string }): ReactElement {
+const PostCard = ({Title, Content}: {
+  Title: string, Content: string
+}): ReactElement => {
   const [cardStyle, setCardStyle] = useState<SerializedStyles>(cardMinusStyle);
 
   return (
     <Card
-      key={Id}
       title={Title}
       extra={
         <a href="#">
@@ -71,49 +81,28 @@ function PostCard({Title, Id, Content}: { Title: string, Id: number, Content: st
       <MDEditor.Markdown source={Content} />
     </Card>
   );
-}
+};
 
-function ListPosts({clickEvent, postsData, skip, take, needRefreshData, refreshEvent}: {
-  clickEvent: (textData: blogPosts) => void,
-  postsData: blogPosts | undefined,
-  skip: number,
-  take: number,
-  needRefreshData: boolean,
-  refreshEvent: (needRefreshData: boolean) => void
-}): ReactElement {
-  // First load
-  if (needRefreshData) {
-    refreshEvent(false);
-    fetch("http://10.11.12.30:5232/GetPosts",
-      {
-        method: "Post",
-        headers: new Headers({
-          "Content-Type": "application/json"
-        }),
-        body: JSON.stringify({skip: skip, take: take, order: "asc", search: ""})
-      })
-      .then((response) => response.json())
-      .then((jsonResult: blogPosts) => clickEvent(jsonResult));
-  }
+const ListPosts = ({postsData}: { postsData: blogPosts | undefined }): ReactElement => {
   return (
     <Space direction="vertical" size={16}>
       {postsData?.data.map((m: blogPost) => {
         return (
-          <PostCard Id={m.Id} Title={m.Title} Content={m.Content}></PostCard>
+          <PostCard key={m.Id} Title={m.Title} Content={m.Content}></PostCard>
         );
       })}
     </Space>
   );
-}
+};
 
 // App
-function App(): ReactElement {
+const App = (): ReactElement => {
   return (
     <div className="App">
       <PostsCards />
     </div>
   );
-}
+};
 
 // function
 
@@ -131,6 +120,7 @@ const cardMinusStyle = css`
 `;
 
 const cardPlusStyle = css`
+  max-width: 1000px;
   height: 100%;
   overflow: unset;
 `;
