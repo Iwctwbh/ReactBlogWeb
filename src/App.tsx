@@ -6,6 +6,8 @@ import {blogPost, blogPosts} from "src/types/blogPost";
 import MDEditor from "@uiw/react-md-editor";
 import {PlusOutlined, MinusOutlined} from "@ant-design/icons";
 import {css, SerializedStyles} from "@emotion/react";
+import {API} from "./utils/config";
+import {getPosts} from "./api/posts";
 
 // element
 const PostsCards = (): ReactElement => {
@@ -18,16 +20,7 @@ const PostsCards = (): ReactElement => {
   useEffect(() => {
     (async () => {
       setNeedRefreshData(false);
-      await fetch("https://nas.iwctwbh.top:5232/GetPosts",
-        {
-          method: "Post",
-          headers: new Headers({
-            "Content-Type": "application/json"
-          }),
-          body: JSON.stringify({skip: skip, take: take, order: "asc", search: ""})
-        })
-        .then((response) => response.json())
-        .then((jsonResult: blogPosts) => setPostsData(jsonResult));
+      await getPosts(JSON.stringify({skip: skip, take: take, order: "asc", search: ""})).then((jsonResult: blogPosts) => setPostsData(jsonResult));
     })();
   }, [needRefreshData]);
 
