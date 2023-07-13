@@ -77,23 +77,33 @@ const PostCard = ({Title, Content}: {
 }): ReactElement => {
   console.log("PostCard is calling");
   const [cardStyle, setCardStyle] = useState<SerializedStyles>(cardMinusStyle);
+  const [scrollHeight, setScrollHeight] = useState<number>(0);
+  const [height, setHeight] = useState<number>(200);
 
   return (
     <Card
+      ref={dom => setScrollHeight(dom?.scrollHeight ?? 0)}
       title={Title}
       extra={
         cardStyle == cardMinusStyle
           ?
           <PlusOutlined
             css={iconHover}
-            onClick={() => setCardStyle(cardPlusStyle)}
+            onClick={() => {
+              setCardStyle(cardPlusStyle);
+              setHeight(scrollHeight);
+            }}
           />
           :
           <MinusOutlined
             css={iconHover}
-            onClick={() => setCardStyle(cardMinusStyle)}
+            onClick={() => {
+              setCardStyle(cardMinusStyle);
+              setHeight(200);
+            }}
           />
       }
+      style={{height: height}}
       css={cardStyle}
       //onClick={() => cardStyle == cardMinusStyle ? setCardStyle(cardPlusStyle) : setCardStyle(cardMinusStyle)}
     >
@@ -127,23 +137,24 @@ const App = (): ReactElement => {
 // function
 
 // style
-const iconHover:SerializedStyles = css`
+const iconHover: SerializedStyles = css`
   &:hover {
     color: #252525;
   }
 `;
 
-const cardMinusStyle:SerializedStyles = css`
+const cardMinusStyle: SerializedStyles = css`
   width: 1000px;
   height: 200px;
   overflow: hidden;
+  transition: height 0.25s linear;
 `;
 
-const cardPlusStyle:SerializedStyles = css`
+const cardPlusStyle: SerializedStyles = css`
   width: 1000px;
   min-height: 200px;
-  height: 100%;
-  overflow: unset;
+  overflow: hidden;
+  transition: height 0.25s linear;
 `;
 
 
