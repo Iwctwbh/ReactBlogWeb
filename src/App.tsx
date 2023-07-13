@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, {ReactElement, useEffect, useState} from "react";
-import {Button, Card, InputNumber, Space} from "antd";
+import {Button, Card, Input, InputNumber, Select, Space} from "antd";
 import "./App.css";
 import {blogPost, blogPosts} from "src/types/blogPost";
 import MDEditor from "@uiw/react-md-editor";
@@ -15,21 +15,52 @@ const PostsCards = (): ReactElement => {
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
   const [needRefreshData, setNeedRefreshData] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>("");
+  const [order, setOrder] = useState<string>("desc");
 
   useEffect(() => {
     (async () => {
       setNeedRefreshData(false);
-      await getPosts(JSON.stringify({skip: skip, take: take, order: "asc", search: ""})).then((jsonResult: blogPosts) => setPostsData(jsonResult));
+      await getPosts(JSON.stringify({
+        skip: skip,
+        take: take,
+        order: order,
+        search: search
+      })).then((jsonResult: blogPosts) => setPostsData(jsonResult));
     })();
   }, [needRefreshData]);
 
   return (
-    <>
+    <Space direction="vertical" size={16}>
       <Space size={16}>
         skip:
-        <InputNumber defaultValue={skip} onChange={(v: number | null) => setSkip(v ?? 0)} />
+        <InputNumber
+          defaultValue={skip}
+          onChange={(v: number | null) => setSkip(v ?? 0)}
+          onPressEnter={(e) => e.key === "Enter" ? setNeedRefreshData(true) : null}
+        />
         take:
-        <InputNumber defaultValue={take} onChange={(v: number | null) => setTake(v ?? 10)} />
+        <InputNumber
+          defaultValue={take}
+          onChange={(v: number | null) => setTake(v ?? 10)}
+          onPressEnter={(e) => e.key === "Enter" ? setNeedRefreshData(true) : null}
+        />
+        search:
+        <Input
+          defaultValue={search}
+          placeholder="search value"
+          onChange={(e) => setSearch(e.target.value)}
+          onPressEnter={(e) => e.key === "Enter" ? setNeedRefreshData(true) : null}
+        />
+        <Select
+          defaultValue={order}
+          style={{width: 70}}
+          onChange={(v: string) => setOrder(v)}
+          options={[
+            {value: "desc", label: "desc"},
+            {value: "asc", label: "asc"}
+          ]}
+        />
         <Button onClick={() => setNeedRefreshData(true)}>
           Get Data
         </Button>
@@ -37,7 +68,7 @@ const PostsCards = (): ReactElement => {
       <div>
         <ListPosts postsData={postsData} />
       </div>
-    </>
+    </Space>
   );
 };
 
