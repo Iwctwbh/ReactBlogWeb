@@ -6,7 +6,6 @@ import {blogPost, blogPosts} from "src/types/blogPost";
 import MDEditor from "@uiw/react-md-editor";
 import {PlusOutlined, MinusOutlined} from "@ant-design/icons";
 import {css, SerializedStyles} from "@emotion/react";
-import {API} from "./utils/config";
 import {getPosts} from "./api/posts";
 
 // element

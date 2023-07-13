@@ -11,3 +11,19 @@ export default class request {
     return await response.json();
   }
 }
+
+export class request2 {
+  fetchGet(options: { url: RequestInfo | URL; data: any; }) {
+    return fetch(options.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(options.data)
+    }).then(res => {
+      return res.json();
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+}
