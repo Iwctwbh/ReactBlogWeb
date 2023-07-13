@@ -127,19 +127,19 @@ const App = (): ReactElement => {
 // function
 
 // style
-const iconHover = css`
+const iconHover:SerializedStyles = css`
   &:hover {
     color: #252525;
   }
 `;
 
-const cardMinusStyle = css`
+const cardMinusStyle:SerializedStyles = css`
   width: 1000px;
   height: 200px;
   overflow: hidden;
 `;
 
-const cardPlusStyle = css`
+const cardPlusStyle:SerializedStyles = css`
   width: 1000px;
   min-height: 200px;
   height: 100%;
