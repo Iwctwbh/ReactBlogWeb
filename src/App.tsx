@@ -9,8 +9,8 @@ import {css, SerializedStyles} from "@emotion/react";
 import {getPosts} from "./api/posts";
 
 // element
-const PostsCards = (): ReactElement => {
-  console.log("PostsCards is calling");
+const Blog = (): ReactElement => {
+  console.log("Blog is calling");
   const [postsData, setPostsData] = useState<blogPosts>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
@@ -66,7 +66,7 @@ const PostsCards = (): ReactElement => {
         </Button>
       </Space>
       <div>
-        <ListPosts postsData={postsData} />
+        <PostCards postsData={postsData} />
       </div>
     </Space>
   );
@@ -102,8 +102,8 @@ const PostCard = ({Title, Content}: {
   );
 };
 
-const ListPosts = ({postsData}: { postsData: blogPosts | undefined }): ReactElement => {
-  console.log("ListPosts is calling");
+const PostCards = ({postsData}: { postsData: blogPosts | undefined }): ReactElement => {
+  console.log("PostCards is calling");
   return (
     <Space direction="vertical" size={16}>
       {postsData?.data.map((m: blogPost) => {
@@ -119,7 +119,7 @@ const ListPosts = ({postsData}: { postsData: blogPosts | undefined }): ReactElem
 const App = (): ReactElement => {
   return (
     <div className="App">
-      <PostsCards />
+      <Blog />
     </div>
   );
 };
