@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, {ReactElement, useEffect, useState} from "react";
-import {Button, Card, Input, InputNumber, Select, Space} from "antd";
+import {Alert, Button, Card, Input, InputNumber, Select, Space} from "antd";
 import "./App.css";
 import {blogPost, blogPosts} from "src/types/blogPost";
 import MDEditor from "@uiw/react-md-editor";
@@ -10,13 +10,13 @@ import {getPosts} from "./api/posts";
 
 // element
 const Blog = (): ReactElement => {
-  console.log("Blog is calling");
   const [postsData, setPostsData] = useState<blogPosts>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
   const [needRefreshData, setNeedRefreshData] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [order, setOrder] = useState<string>("desc");
+  const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -61,10 +61,21 @@ const Blog = (): ReactElement => {
             {value: "asc", label: "asc"}
           ]}
         />
-        <Button onClick={() => setNeedRefreshData(true)}>
+        <Button onClick={() => {
+          if (skip < 0 || take < 0) {
+            setAlertVisible(true);
+            return;
+          }
+          setAlertVisible(false);
+          setNeedRefreshData(true)
+        }}>
           Get Data
         </Button>
       </Space>
+      {alertVisible && (
+        <Alert message="请输入大于0的数。 Please enter a number greater than 0." type="error" closable
+               afterClose={() => setAlertVisible(false)} />
+      )}
       <div>
         <PostCards postsData={postsData} />
       </div>
@@ -75,7 +86,6 @@ const Blog = (): ReactElement => {
 const PostCard = ({Title, Content}: {
   Title: string, Content: string
 }): ReactElement => {
-  console.log("PostCard is calling");
   const [cardStyle, setCardStyle] = useState<SerializedStyles>(cardMinusStyle);
   const [scrollHeight, setScrollHeight] = useState<number>(0);
   const [height, setHeight] = useState<number>(200);
@@ -113,7 +123,6 @@ const PostCard = ({Title, Content}: {
 };
 
 const PostCards = ({postsData}: { postsData: blogPosts | undefined }): ReactElement => {
-  console.log("PostCards is calling");
   return (
     <Space direction="vertical" size={16}>
       {postsData?.data.map((m: blogPost) => {
