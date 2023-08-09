@@ -153,6 +153,7 @@ const iconHover: SerializedStyles = css`
 `;
 
 const cardMinusStyle: SerializedStyles = css`
+  text-align: left;
   width: 1000px;
   height: 200px;
   overflow: hidden;
@@ -160,6 +161,7 @@ const cardMinusStyle: SerializedStyles = css`
 `;
 
 const cardPlusStyle: SerializedStyles = css`
+  text-align: left;
   width: 1000px;
   min-height: 200px;
   overflow: hidden;
