@@ -7,14 +7,16 @@ import MDEditor from "@uiw/react-md-editor";
 import {PlusOutlined, MinusOutlined} from "@ant-design/icons";
 import {css, SerializedStyles} from "@emotion/react";
 import {getPosts} from "./api/posts";
+import Enumerable from "linq";
 
 // element
 const Blog = (): ReactElement => {
+  const [searchParams, _] = useState<URLSearchParams>(new URLSearchParams(window.location.search));
   const [postsData, setPostsData] = useState<blogPosts>();
   const [skip, setSkip] = useState<number>(0);
   const [take, setTake] = useState<number>(10);
   const [needRefreshData, setNeedRefreshData] = useState<boolean>(true);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>((Enumerable.from([...searchParams]).firstOrDefault() ?? [])[1] ?? "");
   const [order, setOrder] = useState<string>("desc");
   const [alertVisible, setAlertVisible] = useState(false);
 
@@ -50,7 +52,12 @@ const Blog = (): ReactElement => {
           defaultValue={search}
           placeholder="search value"
           onChange={(e) => setSearch(e.target.value)}
-          onPressEnter={(e) => e.key === "Enter" ? setNeedRefreshData(true) : null}
+          onPressEnter={(e) => {
+            if (e.key === "Enter") {
+              history.replaceState({}, "", `?search=${search}`);
+              setNeedRefreshData(true);
+            }
+          }}
         />
         <Select
           defaultValue={order}
@@ -67,7 +74,8 @@ const Blog = (): ReactElement => {
             return;
           }
           setAlertVisible(false);
-          setNeedRefreshData(true)
+          history.replaceState({}, "", `?search=${search}`);
+          setNeedRefreshData(true);
         }}>
           Get Data
         </Button>
@@ -147,25 +155,25 @@ const App = (): ReactElement => {
 
 // style
 const iconHover: SerializedStyles = css`
-  &:hover {
-    color: #252525;
-  }
+    &:hover {
+        color: #252525;
+    }
 `;
 
 const cardMinusStyle: SerializedStyles = css`
-  text-align: left;
-  width: 1000px;
-  height: 200px;
-  overflow: hidden;
-  transition: height 0.25s linear;
+    text-align: left;
+    width: 1000px;
+    height: 200px;
+    overflow: hidden;
+    transition: height 0.25s linear;
 `;
 
 const cardPlusStyle: SerializedStyles = css`
-  text-align: left;
-  width: 1000px;
-  min-height: 200px;
-  overflow: hidden;
-  transition: height 0.25s linear;
+    text-align: left;
+    width: 1000px;
+    min-height: 200px;
+    overflow: hidden;
+    transition: height 0.25s linear;
 `;
 
 
