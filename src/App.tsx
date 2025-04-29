@@ -21,15 +21,17 @@ const Blog = (): ReactElement => {
   const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    (async () => {
-      setNeedRefreshData(false);
-      await getPosts(JSON.stringify({
-        skip: skip,
-        take: take,
-        order: order,
-        search: search
-      })).then((jsonResult: blogPosts) => setPostsData(jsonResult));
-    })();
+    if (needRefreshData) {
+      (async () => {
+        await getPosts(JSON.stringify({
+          skip: skip,
+          take: take,
+          order: order,
+          search: search
+        })).then((jsonResult: blogPosts) => setPostsData(jsonResult));
+        setNeedRefreshData(false);
+      })();
+    }
   }, [needRefreshData]);
 
   return (
